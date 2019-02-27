@@ -7,6 +7,7 @@
   "bugs": "https://github.com/mdeljs/mdel-react/issues",
   "keywords": [
     "mdel",
+    "model",
     "mdeljs",
     "react"
   ],
@@ -25,7 +26,7 @@
   "main": "es/index.js",
   "dependencies": {
     "hoist-non-react-statics": "^3.2.1",
-    "mdel": "^3.3.0",
+    "mdel": "^3.4.0",
     "react": "^16.7.0"
   },
   "devDependencies": {

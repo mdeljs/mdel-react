@@ -1,5 +1,5 @@
 import hoistStatics from 'hoist-non-react-statics';
-import { getIsModel, throwError } from 'mdel';
+import { getIsStore, throwError } from 'mdel';
 import React from 'react';
 
 function _classCallCheck(instance, Constructor) {
@@ -167,11 +167,11 @@ function getIsClassComponent(component) {
 /**
  * 监视类组件
  * @param Component {*} 类组件
- * @param onModelUpdate {function(model):function(update):void | null}  数据更新回调
- * @param needCopy {boolean} 是否拷贝react静态属性
+ * @param onStoreUpdate {function(store):function(update):void | null}  数据容器更新回调
+ * @param needCopy {boolean} 是否拷贝组件react属性
  */
 
-function observeClassComponent(Component, onModelUpdate) {
+function observeClassComponent(Component, onStoreUpdate) {
   var needCopy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
   var FinalComponent =
@@ -192,11 +192,11 @@ function observeClassComponent(Component, onModelUpdate) {
       };
 
       var stores = [].concat(_toConsumableArray(Object.values(props)), _toConsumableArray(Object.values(_assertThisInitialized(_this)))).filter(function (store) {
-        return getIsModel(store);
+        return getIsStore(store);
       });
       internal.unSubscribe = stores.map(function (store) {
         return store.subscribe(function () {
-          var storeUpdate = onModelUpdate || this.onModelUpdate;
+          var storeUpdate = onStoreUpdate || this.onStoreUpdate;
           var isSetUpdate = !!storeUpdate;
           var result = isSetUpdate ? storeUpdate(store) : null;
           return function () {
@@ -267,10 +267,10 @@ function getIsFunctionComponent(component) {
 /**
  * 监视函数组件
  * @param component {*} 函数组件
- * @param onModelUpdate {function(model):function(update):void | null} 数据更新回调
+ * @param onStoreUpdate {function(store):function(update):void | null} 数据容器更新回调
  */
 
-function observeFunctionComponent(component, onModelUpdate) {
+function observeFunctionComponent(component, onStoreUpdate) {
   var Component =
   /*#__PURE__*/
   function (_React$Component) {
@@ -292,18 +292,18 @@ function observeFunctionComponent(component, onModelUpdate) {
     return Component;
   }(React.Component);
 
-  return copyComponent(observeClassComponent(Component, onModelUpdate, false), component);
+  return copyComponent(observeClassComponent(Component, onStoreUpdate, false), component);
 }
 
 var version = '3.0.0';
 /**
- * 监视组件的模型数据更新
+ * 监视组件的数据容器更新
  * @param ReactComponent {component} 组件
- * @param [onModelUpdate] {function(model):function(update):void | null}  数据更新回调
+ * @param [onStoreUpdate] {function(store):function(update):void | null}  数据容器更新回调
  */
 
 function observe(ReactComponent) {
-  var onModelUpdate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  var onStoreUpdate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
   if (ReactComponent) {
     throwError(ReactComponent.observed, 'you are already observe to this component');
@@ -311,9 +311,9 @@ function observe(ReactComponent) {
   }
 
   if (getIsClassComponent(ReactComponent)) {
-    return observeClassComponent(ReactComponent, onModelUpdate);
+    return observeClassComponent(ReactComponent, onStoreUpdate);
   } else if (getIsFunctionComponent(ReactComponent)) {
-    return observeFunctionComponent(ReactComponent, onModelUpdate);
+    return observeFunctionComponent(ReactComponent, onStoreUpdate);
   } else {
     throwError(true, 'ReactComponent is not a react component');
   }

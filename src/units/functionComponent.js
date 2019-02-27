@@ -14,14 +14,14 @@ export function getIsFunctionComponent(component) {
 /**
  * 监视函数组件
  * @param component {*} 函数组件
- * @param onModelUpdate {function(model):function(update):void | null} 数据更新回调
+ * @param onStoreUpdate {function(store):function(update):void | null} 数据容器更新回调
  */
-export function observeFunctionComponent(component, onModelUpdate) {
+export function observeFunctionComponent(component, onStoreUpdate) {
   class Component extends React.Component {
     render() {
       return component.call(this, this.props, this.context)
     }
   }
 
-  return copyComponent(observeClassComponent(Component, onModelUpdate, false), component)
+  return copyComponent(observeClassComponent(Component, onStoreUpdate, false), component)
 }

@@ -5,20 +5,20 @@ import {getIsFunctionComponent, observeFunctionComponent} from "./units/function
 export const version = '3.0.0';
 
 /**
- * 监视组件的模型数据更新
+ * 监视组件的数据容器更新
  * @param ReactComponent {component} 组件
- * @param [onModelUpdate] {function(model):function(update):void | null}  数据更新回调
+ * @param [onStoreUpdate] {function(store):function(update):void | null}  数据容器更新回调
  */
-export function observe(ReactComponent, onModelUpdate = null) {
+export function observe(ReactComponent, onStoreUpdate = null) {
   if (ReactComponent) {
     throwError(ReactComponent.observed, 'you are already observe to this component');
 
     ReactComponent.observed = true;
   }
   if (getIsClassComponent(ReactComponent)) {
-    return observeClassComponent(ReactComponent, onModelUpdate);
+    return observeClassComponent(ReactComponent, onStoreUpdate);
   } else if (getIsFunctionComponent(ReactComponent)) {
-    return observeFunctionComponent(ReactComponent, onModelUpdate)
+    return observeFunctionComponent(ReactComponent, onStoreUpdate)
   } else {
     throwError(true, 'ReactComponent is not a react component');
   }

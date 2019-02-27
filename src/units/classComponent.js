@@ -1,4 +1,4 @@
-import {getIsModel} from "mdel";
+import {getIsStore} from "mdel";
 import {copyComponent} from "./common";
 
 /**
@@ -38,10 +38,10 @@ export function getIsClassComponent(component) {
 /**
  * 监视类组件
  * @param Component {*} 类组件
- * @param onModelUpdate {function(model):function(update):void | null}  数据更新回调
- * @param needCopy {boolean} 是否拷贝react静态属性
+ * @param onStoreUpdate {function(store):function(update):void | null}  数据容器更新回调
+ * @param needCopy {boolean} 是否拷贝组件react属性
  */
-export function observeClassComponent(Component, onModelUpdate, needCopy = true) {
+export function observeClassComponent(Component, onStoreUpdate, needCopy = true) {
   class FinalComponent extends Component {
     constructor(props, context) {
       super(props, context);
@@ -49,11 +49,11 @@ export function observeClassComponent(Component, onModelUpdate, needCopy = true)
       const internal = getInternal(this);
 
       const forceUpdate = () => internal.isMounted && this.forceUpdate();
-      const stores = [...Object.values(props), ...Object.values(this)].filter(store => getIsModel(store));
+      const stores = [...Object.values(props), ...Object.values(this)].filter(store => getIsStore(store));
 
-      internal.unSubscribe = stores.map(store => {
+      internal.unSubscribe = stores.map(function (store) {
         return store.subscribe(function () {
-          const storeUpdate = onModelUpdate || this.onModelUpdate;
+          const storeUpdate = onStoreUpdate || this.onStoreUpdate;
           const isSetUpdate = !!storeUpdate;
 
           const result = isSetUpdate ? storeUpdate(store) : null;
