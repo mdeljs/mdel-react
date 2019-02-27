@@ -298,7 +298,7 @@ function observeFunctionComponent(component, onStoreUpdate) {
 var version = '3.0.0';
 /**
  * 监视组件的数据容器更新
- * @param ReactComponent {component} 组件
+ * @param ReactComponent {*} 组件
  * @param [onStoreUpdate] {function(store):function(update):void | null}  数据容器更新回调
  */
 
