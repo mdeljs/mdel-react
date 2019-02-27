@@ -1,0 +1,40 @@
+{
+  "name": "mdel-react",
+  "version": "3.0.0",
+  "description": "mdel react",
+  "license": "MIT",
+  "repository": "github:mdeljs/mdel-react",
+  "bugs": "https://github.com/mdeljs/mdel-react/issues",
+  "keywords": [
+    "mdel",
+    "mdeljs",
+    "react"
+  ],
+  "author": {
+    "name": "yujingwyh",
+    "email": "yujingwyh@163.com"
+  },
+  "scripts": {
+    "build": "rollup --config"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "es"
+  ],
+  "main": "es/index.js",
+  "dependencies": {
+    "hoist-non-react-statics": "^3.2.1",
+    "mdel": "^3.3.0",
+    "react": "^16.7.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "rollup": "^0.66.6",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-minify": "^1.0.3"
+  }
+}
