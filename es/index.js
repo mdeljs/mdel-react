@@ -196,7 +196,7 @@ function observeClassComponent(Component, onStoreUpdate) {
       });
       internal.unSubscribe = stores.map(function (store) {
         return store.subscribe(function () {
-          var storeUpdate = onStoreUpdate || this.onStoreUpdate;
+          var storeUpdate = onStoreUpdate || _this.onStoreUpdate;
           var isSetUpdate = !!storeUpdate;
           var result = isSetUpdate ? storeUpdate(store) : null;
           return function () {

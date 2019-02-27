@@ -51,8 +51,8 @@ export function observeClassComponent(Component, onStoreUpdate, needCopy = true)
       const forceUpdate = () => internal.isMounted && this.forceUpdate();
       const stores = [...Object.values(props), ...Object.values(this)].filter(store => getIsStore(store));
 
-      internal.unSubscribe = stores.map(function (store) {
-        return store.subscribe(function () {
+      internal.unSubscribe = stores.map((store) => {
+        return store.subscribe(() => {
           const storeUpdate = onStoreUpdate || this.onStoreUpdate;
           const isSetUpdate = !!storeUpdate;
 
