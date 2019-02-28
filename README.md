@@ -12,10 +12,43 @@
 ## 使用
 
 **observe** 用来监视一个组件，可以是类组件，也可以是无状态组件 <br />
-当组件的props中的容器或者组件的容器属性发生数据更新时，会自动渲染组件 <br />
-你也可以使用onStoreUpdate参数手动控制渲染，onStoreUpdate只在组件mount时触发
+当组件的 props 中的容器或者组件的容器属性发生数据更新时，会自动渲染组件 <br />
+你也可以使用 onStoreUpdate 参数手动控制渲染，onStoreUpdate 只在组件 mount 时触发
 
 ## 示例
+
+```jsx harmony
+import {observe} from 'mdel-react'
+
+//1.
+@observe
+class UserComponent extends React.Component{
+    sUser = userStore;
+    sList = new ListModel();
+    
+    //可省略
+    onStoreUpdate(store){
+        return function(update) {
+          update();
+        }
+    }
+    
+    render(){
+        const {sHistory} = this.props;
+        
+        return <div>
+            ...
+        </div>
+    }
+}
+//2.
+const UserComponent = observe(function({sHistory}) {
+  return <div>
+    ...
+  </div>
+})
+
+```
 
 ## API
 ### observe
