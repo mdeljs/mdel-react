@@ -63,6 +63,9 @@ const ListComponent = observe(function({sHistory,sList}) {
   interface IOnStoreUpdate {
     (store):(update)=>void
   }
+  interface Component extends React.Component{
+    onStoreUpdate?:IOnStoreUpdate
+  }
   
   interface observe extends ClassDecorator{
     <T extends React.ComponentClass>(ClassComponent:T,onStoreUpdate?:IOnStoreUpdate):T
