@@ -310,6 +310,10 @@ function observe(ReactComponent) {
     ReactComponent.observed = true;
   }
 
+  if (onStoreUpdate) {
+    throwError(typeof onStoreUpdate !== 'function', 'onStoreUpdate is not a function');
+  }
+
   if (getIsClassComponent(ReactComponent)) {
     return observeClassComponent(ReactComponent, onStoreUpdate);
   } else if (getIsFunctionComponent(ReactComponent)) {

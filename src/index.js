@@ -15,6 +15,9 @@ export function observe(ReactComponent, onStoreUpdate = null) {
 
     ReactComponent.observed = true;
   }
+  if (onStoreUpdate) {
+    throwError(typeof onStoreUpdate !== 'function', 'onStoreUpdate is not a function');
+  }
   if (getIsClassComponent(ReactComponent)) {
     return observeClassComponent(ReactComponent, onStoreUpdate);
   } else if (getIsFunctionComponent(ReactComponent)) {
