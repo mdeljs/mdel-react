@@ -25,6 +25,7 @@
   ],
   "main": "es/index.js",
   "dependencies": {
+    "@types/react": "^16.8.5",
     "hoist-non-react-statics": "^3.2.1",
     "mdel": "^3.5.0",
     "react": "^16.7.0"

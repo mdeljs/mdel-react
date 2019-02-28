@@ -46,7 +46,7 @@ class UserComponent extends React.Component{
     }
 }
 //2.
-const UserComponent = observe(function({sHistory}) {
+const ListComponent = observe(function({sHistory,sList}) {
   return <div>
     ...
   </div>
@@ -55,24 +55,22 @@ const UserComponent = observe(function({sHistory}) {
 ```
 
 ## API
+
 ### observe
 
 #### 定义
-```typescript jsx
+```typescript
   interface IOnStoreUpdate {
     (store):(update)=>void
   }
+  
   interface observe extends ClassDecorator{
-    <T>(ClassComponent:T,onStoreUpdate?:IOnStoreUpdate):T
-    <T>(functionComponent:T,onStoreUpdate?:IOnStoreUpdate):T
+    <T extends React.ComponentClass>(ClassComponent:T,onStoreUpdate?:IOnStoreUpdate):T
+    <T extends React.FunctionComponent>(functionComponent:T,onStoreUpdate?:IOnStoreUpdate):T
   }
 ```
-#### 语法
-```jsx harmony
-  @observe
-  class Component extends React.Component{
-    onStoreUpdate?:IOnStoreUpdate
-  }
-  const Component = observe(ClassComponent,onStoreUpdate?:IOnStoreUpdate);
-  const Component = observe(functionComponent,onStoreUpdate?:IOnStoreUpdate);
-```
+
+绑定react组件，来监视数据容器的更新
+
+* onStoreUpdate是一个函数，在容器update调用之前执行，
+并返回一个函数，在容器update调用之后执行，其中调用update参数表示渲染组件
