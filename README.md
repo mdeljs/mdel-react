@@ -5,7 +5,17 @@
 
 * 安装：`npm install mdel-react --save`
 
+## mdel
+
+**mdel** 是一个数据管理器，文档 [链接](https://github.com/mdeljs/mdel)
+
 ## 使用
+
+**observe**用来监视一个组件，可以是类组件，也可以是无状态组件
+
+
+
+## 示例
 
 ## API
 ### observe
