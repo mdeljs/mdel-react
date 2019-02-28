@@ -75,4 +75,4 @@ const ListComponent = observe(function({sHistory,sList}) {
 
 绑定react组件，来监视数据容器的更新
 
-* onStoreUpdate是一个函数，在容器数据更新前执行，并返回一个函数，在容器数据更新后执行，其中调用update参数表示渲染组件
+* onStoreUpdate是一个函数，在容器数据更新前执行，并返回一个函数，在容器数据更新后执行，其中执行update参数表示渲染组件
