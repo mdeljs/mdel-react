@@ -13,7 +13,7 @@
 
 **observe** 用来监视一个组件，可以是类组件，也可以是无状态组件 <br />
 当组件 props 中的容器或者组件的容器属性发生数据更新时，会自动渲染组件 <br />
-你也可以使用 onStoreUpdate 参数手动控制渲染，onStoreUpdate 只在组件 mount 时触发
+你也可以使用 onStoreUpdate 回调手动控制渲染，onStoreUpdate 只在组件 mount 时触发
 
 ## 示例
 
@@ -72,5 +72,4 @@ const ListComponent = observe(function({sHistory,sList}) {
 
 绑定react组件，来监视数据容器的更新
 
-* onStoreUpdate是一个函数，在容器update调用之前执行，
-并返回一个函数，在容器update调用之后执行，其中调用update参数表示渲染组件
+* onStoreUpdate是一个函数，在容器数据更新前执行，并返回一个函数，在容器数据更新后执行，其中调用update参数表示渲染组件
