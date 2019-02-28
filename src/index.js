@@ -2,7 +2,7 @@ import {throwError} from 'mdel'
 import {getIsClassComponent, observeClassComponent} from "./units/classComponent";
 import {getIsFunctionComponent, observeFunctionComponent} from "./units/functionComponent";
 
-export const version = '3.0.0';
+export const version = '3.1.0';
 
 /**
  * 监视组件的数据容器更新

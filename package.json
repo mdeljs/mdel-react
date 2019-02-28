@@ -1,6 +1,6 @@
 {
   "name": "mdel-react",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "绑定react组件，来监视数据容器的更新",
   "license": "MIT",
   "repository": "github:mdeljs/mdel-react",
