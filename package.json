@@ -24,6 +24,7 @@
     "es"
   ],
   "main": "es/index.js",
+  "module": "es/index.js",
   "dependencies": {
     "hoist-non-react-statics": "^3.2.1",
     "mdel": "^3.5.0",
