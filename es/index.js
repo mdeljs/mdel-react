@@ -198,7 +198,7 @@ function observeClassComponent(Component, onStoreUpdate) {
         return store.subscribe(function () {
           var storeUpdate = onStoreUpdate || _this.onStoreUpdate;
           var isSetUpdate = !!storeUpdate;
-          if (!internal.isMounted) return;
+          if (!internal.isMounted) return function () {};
           var result = isSetUpdate ? storeUpdate.call(_assertThisInitialized(_this), store) : null;
           return function () {
             if (isSetUpdate) {
@@ -303,7 +303,7 @@ function observeFunctionComponent(component, onStoreUpdate) {
   return copyComponent(observeClassComponent(Component, onStoreUpdate, false), component);
 }
 
-var version = '3.3.0';
+var version = '3.4.0';
 /**
  * 监视组件的数据容器更新
  * @param ReactComponent {*} 组件
