@@ -194,7 +194,7 @@ function observeClassComponent(Component, onStoreUpdate) {
       var stores = [].concat(_toConsumableArray(Object.values(props)), _toConsumableArray(Object.values(_assertThisInitialized(_this)))).filter(function (store) {
         return getIsStore(store);
       });
-      internal.unSubscribe = stores.map(function (store) {
+      var unSubscribes = stores.map(function (store) {
         return store.subscribe(function () {
           var storeUpdate = onStoreUpdate || _this.onStoreUpdate;
           var isSetUpdate = !!storeUpdate;
@@ -209,6 +209,13 @@ function observeClassComponent(Component, onStoreUpdate) {
           };
         });
       });
+
+      internal.unSubscribe = function () {
+        unSubscribes.forEach(function (unSubscribe) {
+          return unSubscribe();
+        });
+      };
+
       internal.stores = stores;
       return _this;
     }
@@ -296,7 +303,7 @@ function observeFunctionComponent(component, onStoreUpdate) {
   return copyComponent(observeClassComponent(Component, onStoreUpdate, false), component);
 }
 
-var version = '3.2.0';
+var version = '3.3.0';
 /**
  * 监视组件的数据容器更新
  * @param ReactComponent {*} 组件
