@@ -56,10 +56,12 @@ export function observeClassComponent(Component, onStoreUpdate, needCopy = true)
           const storeUpdate = onStoreUpdate || this.onStoreUpdate;
           const isSetUpdate = !!storeUpdate;
 
-          const result = isSetUpdate ? storeUpdate(store) : null;
-          return function () {
+          if (!internal.isMounted) return;
+
+          const result = isSetUpdate ? storeUpdate.call(this, store) : null;
+          return () => {
             if (isSetUpdate) {
-              result(forceUpdate);
+              result.call(this, forceUpdate);
             } else {
               forceUpdate();
             }
