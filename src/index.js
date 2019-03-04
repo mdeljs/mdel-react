@@ -2,26 +2,26 @@ import {throwError} from 'mdel'
 import {getIsClassComponent, observeClassComponent} from "./units/classComponent";
 import {getIsFunctionComponent, observeFunctionComponent} from "./units/functionComponent";
 
-export const version = '3.4.0';
+export const version = '3.5.0';
 
 /**
- * 监视组件的数据容器更新
+ * 监视组件容器的数据修改
  * @param ReactComponent {*} 组件
- * @param [onStoreUpdate] {function(store):function(update):void | null}  数据容器更新回调
+ * @param [onStoreChange] {function(store):function(update):void | null}  容器的数据修改时回调
  */
-export function observe(ReactComponent, onStoreUpdate = null) {
+export function observe(ReactComponent, onStoreChange = null) {
   if (ReactComponent) {
     throwError(ReactComponent.observed, 'you are already observe to this component');
 
     ReactComponent.observed = true;
   }
-  if (onStoreUpdate) {
-    throwError(typeof onStoreUpdate !== 'function', 'onStoreUpdate is not a function');
+  if (onStoreChange) {
+    throwError(typeof onStoreChange !== 'function', 'onStoreChange is not a function');
   }
   if (getIsClassComponent(ReactComponent)) {
-    return observeClassComponent(ReactComponent, onStoreUpdate);
+    return observeClassComponent(ReactComponent, onStoreChange);
   } else if (getIsFunctionComponent(ReactComponent)) {
-    return observeFunctionComponent(ReactComponent, onStoreUpdate)
+    return observeFunctionComponent(ReactComponent, onStoreChange)
   } else {
     throwError(true, 'ReactComponent is not a react component');
   }

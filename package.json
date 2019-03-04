@@ -1,7 +1,7 @@
 {
   "name": "mdel-react",
-  "version": "3.4.0",
-  "description": "绑定react组件，来监视数据容器的更新",
+  "version": "3.5.0",
+  "description": "绑定react组件，来监视容器的数据修改",
   "license": "MIT",
   "repository": "github:mdeljs/mdel-react",
   "bugs": "https://github.com/mdeljs/mdel-react/issues",
@@ -27,7 +27,7 @@
   "module": "es/index.js",
   "dependencies": {
     "hoist-non-react-statics": "^3.2.1",
-    "mdel": "^3.5.0",
+    "mdel": "^3.9.0",
     "react": "^16.7.0"
   },
   "devDependencies": {

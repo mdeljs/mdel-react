@@ -1,5 +1,5 @@
 # mdel-react
-绑定react组件，来监视数据容器的更新
+绑定react组件，来监视数据容器的修改
 
 ## 安装
 
@@ -12,8 +12,8 @@
 ## 使用
 
 **observe** 用来监视一个组件，可以是类组件，也可以是无状态组件 <br />
-当组件 props 中的容器或者组件的容器属性发生数据更新时，会自动渲染组件 <br />
-你也可以使用 onStoreUpdate 回调手动控制渲染，onStoreUpdate 只在组件 mount 时触发
+当组件 props 中的容器或者组件的容器属性发生数据修改时，会自动渲染组件 <br />
+你也可以使用 onStoreChange 回调手动控制渲染，onStoreChange 只在组件 mount 时触发
 
 ## 示例
 
@@ -26,8 +26,8 @@ class UserComponent extends React.Component{
     sUser = userStore;
     sList = new ListModel();
     
-    //onStoreUpdate 可省略
-    onStoreUpdate(store){
+    //onStoreChange 可省略
+    onStoreChange(store){
         const prevData = store.data;
         
         return function(update) {
@@ -60,19 +60,19 @@ const ListComponent = observe(function({sHistory,sList}) {
 
 #### 定义
 ```typescript
-  interface IOnStoreUpdate {
+  interface IonStoreChange {
     (store):(update)=>void
   }
   interface Component extends React.Component{
-    onStoreUpdate?:IOnStoreUpdate
+    onStoreChange?:IonStoreChange
   }
   
   interface observe extends ClassDecorator{
-    <T extends React.ComponentClass>(ClassComponent:T,onStoreUpdate?:IOnStoreUpdate):T
-    <T extends React.FunctionComponent>(functionComponent:T,onStoreUpdate?:IOnStoreUpdate):T
+    <T extends React.ComponentClass>(ClassComponent:T,onStoreChange?:IonStoreChange):T
+    <T extends React.FunctionComponent>(functionComponent:T,onStoreChange?:IonStoreChange):T
   }
 ```
 
-绑定react组件，来监视数据容器的更新
+绑定react组件，监视容器的数据修改
 
-* onStoreUpdate是一个函数，在容器数据更新前执行，并返回一个函数，在容器数据更新后执行，其中执行update参数表示渲染组件
+* onStoreChange是一个函数，在容器数据修改前执行，并返回一个函数，在容器数据修改后执行，其中执行update参数表示渲染组件

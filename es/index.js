@@ -167,11 +167,11 @@ function getIsClassComponent(component) {
 /**
  * 监视类组件
  * @param Component {*} 类组件
- * @param onStoreUpdate {function(store):function(update):void | null}  数据容器更新回调
+ * @param onStoreChange {function(store):function(update):void | null}  容器的数据修改时回调
  * @param needCopy {boolean} 是否拷贝组件react属性
  */
 
-function observeClassComponent(Component, onStoreUpdate) {
+function observeClassComponent(Component, onStoreChange) {
   var needCopy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
   var FinalComponent =
@@ -196,7 +196,7 @@ function observeClassComponent(Component, onStoreUpdate) {
       });
       var unSubscribes = stores.map(function (store) {
         return store.subscribe(function () {
-          var storeUpdate = onStoreUpdate || _this.onStoreUpdate;
+          var storeUpdate = onStoreChange || _this.onStoreChange;
           var isSetUpdate = !!storeUpdate;
           if (!internal.isMounted) return function () {};
           var result = isSetUpdate ? storeUpdate.call(_assertThisInitialized(_this), store) : null;
@@ -275,10 +275,10 @@ function getIsFunctionComponent(component) {
 /**
  * 监视函数组件
  * @param component {*} 函数组件
- * @param onStoreUpdate {function(store):function(update):void | null} 数据容器更新回调
+ * @param onStoreChange {function(store):function(update):void | null} 容器的数据修改时回调
  */
 
-function observeFunctionComponent(component, onStoreUpdate) {
+function observeFunctionComponent(component, onStoreChange) {
   var Component =
   /*#__PURE__*/
   function (_React$Component) {
@@ -300,32 +300,32 @@ function observeFunctionComponent(component, onStoreUpdate) {
     return Component;
   }(React.Component);
 
-  return copyComponent(observeClassComponent(Component, onStoreUpdate, false), component);
+  return copyComponent(observeClassComponent(Component, onStoreChange, false), component);
 }
 
-var version = '3.4.0';
+var version = '3.5.0';
 /**
- * 监视组件的数据容器更新
+ * 监视组件容器的数据修改
  * @param ReactComponent {*} 组件
- * @param [onStoreUpdate] {function(store):function(update):void | null}  数据容器更新回调
+ * @param [onStoreChange] {function(store):function(update):void | null}  容器的数据修改时回调
  */
 
 function observe(ReactComponent) {
-  var onStoreUpdate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  var onStoreChange = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
   if (ReactComponent) {
     throwError(ReactComponent.observed, 'you are already observe to this component');
     ReactComponent.observed = true;
   }
 
-  if (onStoreUpdate) {
-    throwError(typeof onStoreUpdate !== 'function', 'onStoreUpdate is not a function');
+  if (onStoreChange) {
+    throwError(typeof onStoreChange !== 'function', 'onStoreChange is not a function');
   }
 
   if (getIsClassComponent(ReactComponent)) {
-    return observeClassComponent(ReactComponent, onStoreUpdate);
+    return observeClassComponent(ReactComponent, onStoreChange);
   } else if (getIsFunctionComponent(ReactComponent)) {
-    return observeFunctionComponent(ReactComponent, onStoreUpdate);
+    return observeFunctionComponent(ReactComponent, onStoreChange);
   } else {
     throwError(true, 'ReactComponent is not a react component');
   }
