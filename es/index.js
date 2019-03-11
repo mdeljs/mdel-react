@@ -348,6 +348,6 @@ function combine() {
   };
 }
 
-var version = '4.0.0';
+var version = '4.0.1';
 
 export { version, observe, combine };
