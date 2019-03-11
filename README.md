@@ -52,9 +52,8 @@ const ListComponent = observe(function({sHistory,sList}) {
 
 ### observe
 
-#### 定义
 ```typescript
-  interface IcomponentStoreChange {
+  interface IComponentStoreChange {
     (store,prevData):true|any
   }
   interface Component extends React.Component{
@@ -69,17 +68,57 @@ const ListComponent = observe(function({sHistory,sList}) {
 
 绑定react组件，监视容器的数据修改
 
-* componentStoreChange，在容器数据后执行，返回 **true** 则不会渲染组件
+* componentStoreChange，在容器数据修改后执行，返回 **true** 则不会渲染组件
+
+#### 示例
+```jsx harmony
+//示例1
+@observe
+class UserComponent extends React.Component{}
+//示例2
+const UserComponent = observe(
+    class extends React.Component{}
+);
+//示例3
+const UserComponent = observe(
+    function({sUser}){
+        return <div>
+            ...
+        </div>
+    }
+);
+```
 
 ### combine
-
-#### 定义
 
 ```typescript
   interface ICombine {
     (...args:IcomponentStoreChange[]):IcomponentStoreChange
   }
 ```
+
 合并多个 componentStoreChange 为一个函数，执行顺序为从左向右
 
 #### 示例
+
+```jsx harmony
+@observe
+class UserComponent extends React.Component{
+    componentStoreChange = combine(
+        locationSearchChange(function() {
+          console.log('search change');
+          //当location中search发生修改时不要渲染组件
+          return true;
+        }),
+        //...
+    )
+}
+
+function locationSearchChange(callback) {
+  return function(store,prevData) {
+    if(store.name === 'history' && prevData.search !== store.data.search){
+        return callback(prevData);
+    }
+  }
+}
+```
