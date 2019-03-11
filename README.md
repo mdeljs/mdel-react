@@ -13,7 +13,7 @@
 
 **observe** 用来监视一个组件，可以是类组件，也可以是无状态组件 <br />
 当组件 props 中的容器或者组件的容器属性发生数据修改时，会自动渲染组件 <br />
-你也可以使用 onStoreChange 回调手动控制渲染，onStoreChange 只在组件 mount 时触发
+你也可以使用 componentStoreChange 回调手动控制渲染，componentStoreChange 只在组件 mount 时触发
 
 ## 示例
 
@@ -26,15 +26,9 @@ class UserComponent extends React.Component{
     sUser = userStore;
     sList = new ListModel();
     
-    //onStoreChange 可省略
-    onStoreChange(store){
-        const prevData = store.data;
-        
-        return function(update) {
-            //...
-            
-            update();
-        }
+    //componentStoreChange 可省略
+    componentStoreChange(store,prevData){
+        //... 
     }
     
     render(){
@@ -60,19 +54,32 @@ const ListComponent = observe(function({sHistory,sList}) {
 
 #### 定义
 ```typescript
-  interface IonStoreChange {
-    (store):(update)=>void
+  interface IcomponentStoreChange {
+    (store,prevData):true|any
   }
   interface Component extends React.Component{
-    onStoreChange?:IonStoreChange
+    componentStoreChange?:IcomponentStoreChange
   }
   
   interface observe extends ClassDecorator{
-    <T extends React.ComponentClass>(ClassComponent:T,onStoreChange?:IonStoreChange):T
-    <T extends React.FunctionComponent>(functionComponent:T,onStoreChange?:IonStoreChange):T
+    <T extends React.ComponentClass>(ClassComponent:T,componentStoreChange?:IcomponentStoreChange):T
+    <T extends React.FunctionComponent>(functionComponent:T,componentStoreChange?:IcomponentStoreChange):T
   }
 ```
 
 绑定react组件，监视容器的数据修改
 
-* onStoreChange是一个函数，在容器数据修改前执行，并返回一个函数，在容器数据修改后执行，其中执行update参数表示渲染组件
+* componentStoreChange，在容器数据后执行，返回 **true** 则不会渲染组件
+
+### combine
+
+#### 定义
+
+```typescript
+  interface ICombine {
+    (...args:IcomponentStoreChange[]):IcomponentStoreChange
+  }
+```
+合并多个 componentStoreChange 为一个函数，执行顺序为从左向右
+
+#### 示例
