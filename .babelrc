@@ -3,6 +3,7 @@
     [
       "@babel/preset-env",
       {
+        "loose": true,
         "modules": false,
         "targets": {
           "browsers": "ie >= 9"

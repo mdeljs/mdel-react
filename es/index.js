@@ -2,57 +2,10 @@ import hoistStatics from 'hoist-non-react-statics';
 import { getIsStore, throwError } from 'mdel';
 import React from 'react';
 
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-
-function _defineProperties(target, props) {
-  for (var i = 0; i < props.length; i++) {
-    var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
-    descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, descriptor.key, descriptor);
-  }
-}
-
-function _createClass(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties(Constructor, staticProps);
-  return Constructor;
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function");
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) _setPrototypeOf(subClass, superClass);
-}
-
-function _getPrototypeOf(o) {
-  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-    return o.__proto__ || Object.getPrototypeOf(o);
-  };
-  return _getPrototypeOf(o);
-}
-
-function _setPrototypeOf(o, p) {
-  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-    o.__proto__ = p;
-    return o;
-  };
-
-  return _setPrototypeOf(o, p);
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  subClass.__proto__ = superClass;
 }
 
 function _assertThisInitialized(self) {
@@ -61,64 +14,6 @@ function _assertThisInitialized(self) {
   }
 
   return self;
-}
-
-function _possibleConstructorReturn(self, call) {
-  if (call && (typeof call === "object" || typeof call === "function")) {
-    return call;
-  }
-
-  return _assertThisInitialized(self);
-}
-
-function _superPropBase(object, property) {
-  while (!Object.prototype.hasOwnProperty.call(object, property)) {
-    object = _getPrototypeOf(object);
-    if (object === null) break;
-  }
-
-  return object;
-}
-
-function _get(target, property, receiver) {
-  if (typeof Reflect !== "undefined" && Reflect.get) {
-    _get = Reflect.get;
-  } else {
-    _get = function _get(target, property, receiver) {
-      var base = _superPropBase(target, property);
-
-      if (!base) return;
-      var desc = Object.getOwnPropertyDescriptor(base, property);
-
-      if (desc.get) {
-        return desc.get.call(receiver);
-      }
-
-      return desc.value;
-    };
-  }
-
-  return _get(target, property, receiver || target);
-}
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
-}
-
-function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
 }
 
 function copyComponent(target, source) {
@@ -171,27 +66,27 @@ function getIsClassComponent(component) {
  * @param needCopy {boolean} 是否拷贝组件react属性
  */
 
-function observeClassComponent(Component, componentStoreChange) {
-  var needCopy = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+function observeClassComponent(Component, componentStoreChange, needCopy) {
+  if (needCopy === void 0) {
+    needCopy = true;
+  }
 
   var FinalComponent =
   /*#__PURE__*/
   function (_Component) {
-    _inherits(FinalComponent, _Component);
+    _inheritsLoose(FinalComponent, _Component);
 
     function FinalComponent(props, context) {
       var _this;
 
-      _classCallCheck(this, FinalComponent);
-
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(FinalComponent).call(this, props, context));
+      _this = _Component.call(this, props, context) || this;
       var internal = getInternal(_assertThisInitialized(_this));
 
       var forceUpdate = function forceUpdate() {
         return internal.isMounted && _this.forceUpdate();
       };
 
-      var stores = [].concat(_toConsumableArray(Object.values(props)), _toConsumableArray(Object.values(_assertThisInitialized(_this)))).filter(function (store) {
+      var stores = [].concat(Object.values(props), Object.values(_assertThisInitialized(_this))).filter(function (store) {
         return getIsStore(store);
       });
       var unSubscribes = stores.map(function (store) {
@@ -215,42 +110,40 @@ function observeClassComponent(Component, componentStoreChange) {
       return _this;
     }
 
-    _createClass(FinalComponent, [{
-      key: "componentDidMount",
-      value: function componentDidMount() {
-        var internal = getInternal(this);
+    var _proto = FinalComponent.prototype;
 
-        if (_get(_getPrototypeOf(FinalComponent.prototype), "componentDidMount", this)) {
-          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-          }
+    _proto.componentDidMount = function componentDidMount() {
+      var internal = getInternal(this);
 
-          _get(_getPrototypeOf(FinalComponent.prototype), "componentDidMount", this).apply(this, args);
+      if (_Component.prototype.componentDidMount) {
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
         }
 
-        internal.isMounted = true;
+        _Component.prototype.componentDidMount.apply(this, args);
       }
-    }, {
-      key: "componentWillUnmount",
-      value: function componentWillUnmount() {
-        var internal = getInternal(this);
 
-        if (_get(_getPrototypeOf(FinalComponent.prototype), "componentWillUnmount", this)) {
-          for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-            args[_key2] = arguments[_key2];
-          }
+      internal.isMounted = true;
+    };
 
-          _get(_getPrototypeOf(FinalComponent.prototype), "componentWillUnmount", this).apply(this, args);
+    _proto.componentWillUnmount = function componentWillUnmount() {
+      var internal = getInternal(this);
+
+      if (_Component.prototype.componentWillUnmount) {
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
         }
 
-        internal.isMounted = false;
-
-        if (internal.unSubscribe) {
-          internal.unSubscribe();
-          internal.unSubscribe = null;
-        }
+        _Component.prototype.componentWillUnmount.apply(this, args);
       }
-    }]);
+
+      internal.isMounted = false;
+
+      if (internal.unSubscribe) {
+        internal.unSubscribe();
+        internal.unSubscribe = null;
+      }
+    };
 
     return FinalComponent;
   }(Component);
@@ -277,20 +170,17 @@ function observeFunctionComponent(component, componentStoreChange) {
   var Component =
   /*#__PURE__*/
   function (_React$Component) {
-    _inherits(Component, _React$Component);
+    _inheritsLoose(Component, _React$Component);
 
     function Component() {
-      _classCallCheck(this, Component);
-
-      return _possibleConstructorReturn(this, _getPrototypeOf(Component).apply(this, arguments));
+      return _React$Component.apply(this, arguments) || this;
     }
 
-    _createClass(Component, [{
-      key: "render",
-      value: function render() {
-        return component.call(this, this.props, this.context);
-      }
-    }]);
+    var _proto = Component.prototype;
+
+    _proto.render = function render() {
+      return component.call(this, this.props, this.context);
+    };
 
     return Component;
   }(React.Component);
@@ -304,8 +194,10 @@ function observeFunctionComponent(component, componentStoreChange) {
  * @param [componentStoreChange] {function(store,prevData):true|*}  组件容器的数据修改时回调
  */
 
-function observe(ReactComponent) {
-  var componentStoreChange = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+function observe(ReactComponent, componentStoreChange) {
+  if (componentStoreChange === void 0) {
+    componentStoreChange = null;
+  }
 
   if (ReactComponent) {
     throwError(ReactComponent.observed, 'you are already observe to this component');
@@ -348,6 +240,6 @@ function combine() {
   };
 }
 
-var version = '4.0.1';
+var version = '4.1.0';
 
 export { version, observe, combine };
