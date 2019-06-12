@@ -13,7 +13,7 @@
 
 **observe** 用来监视一个组件，可以是类组件，也可以是无状态组件 <br />
 当组件 props 中的容器或者组件的容器属性发生数据修改时，会自动渲染组件 <br />
-使用 componentStoreUpdate 手动控制渲染，componentStoreUpdate 只在组件 mount 时触发
+使用 componentStoreChange 手动控制渲染，componentStoreChange 只在组件 mount 时触发
 
 ## 示例
 
@@ -26,8 +26,8 @@ class UserComponent extends React.Component{
     sUser = userStore;
     sList = new ListModel();
     
-    //componentStoreUpdate 可省略
-    componentStoreUpdate(store,update){
+    //componentStoreChange 可省略
+    componentStoreChange(store,update){
         //... 
     }
     
@@ -53,24 +53,25 @@ const ListComponent = observe(function({sHistory,sList}) {
 ### observe
 
 ```typescript
-  interface IComponentStoreUpdate {
+  interface IcomponentStoreChange {
     (store,update)
   }
   interface Component extends React.Component{
-    componentStoreUpdate?:IcomponentStoreUpdate
+    componentStoreChange?:IcomponentStoreChange
   }
   
   interface observe extends ClassDecorator{
-    <T extends React.ComponentClass>(ClassComponent:T,componentStoreUpdate?:IcomponentStoreUpdate):T
-    <T extends React.FunctionComponent>(functionComponent:T,componentStoreUpdate?:IcomponentStoreUpdate):T
+    <T extends React.ComponentClass>(ClassComponent:T,componentStoreChange?:IcomponentStoreChange):T
+    <T extends React.FunctionComponent>(functionComponent:T,componentStoreChange?:IcomponentStoreChange):T
   }
 ```
 
 绑定react组件，监视容器的数据修改
 
-* componentStoreUpdate，在容器数据修改后执行，返回 **true** 则不会渲染组件
+* componentStoreChange，在容器数据修改后执行，其中执行参数update可以渲染组件
 
 #### 示例
+1.
 ```jsx harmony
 //示例1
 @observe
@@ -87,28 +88,26 @@ const UserComponent = observe(
         </div>
     }
 );
-```
 
-#### 示例
-
-```jsx harmony
+2.
 @observe
 class UserComponent extends React.Component{
-    componentStoreChange = combine(
-        locationSearchChange(function() {
-          console.log('search change');
-          //当location中search发生修改时不要渲染组件
-          return true;
-        }),
-        //...
-    )
+    componentStoreChange(store,update){
+        //当location中search发生修改时不要渲染组件
+        if(!getIsLocationSearchChange()){
+            update();
+        }
+    }
 }
 
-function locationSearchChange(callback) {
-  return function(store,prevData) {
-    if(store.name === 'history' && prevData.search !== store.data.search){
-        return callback(prevData);
-    }
+function getIsLocationSearchChange(store) {
+  if(store.name === 'history' && store.prevData.search !== store.data.search){
+    return true;
   }
+  return false
 }
 ```
+## 更新日志
+
+### 5.0.0
+1. 移除combine函数

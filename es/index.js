@@ -62,11 +62,11 @@ function getIsClassComponent(component) {
 /**
  * 监视类组件
  * @param Component {*} 类组件
- * @param componentStoreUpdate {function(store,update)}  组件容器的数据修改时回调
+ * @param componentStoreChange {function(store,update)}  组件容器的数据修改时回调
  * @param needCopy {boolean} 是否拷贝组件react属性
  */
 
-function observeClassComponent(Component, componentStoreUpdate, needCopy) {
+function observeClassComponent(Component, componentStoreChange, needCopy) {
   if (needCopy === void 0) {
     needCopy = true;
   }
@@ -93,7 +93,7 @@ function observeClassComponent(Component, componentStoreUpdate, needCopy) {
         return store.subscribe(function () {
           if (!internal.isMounted) return;
           var isUpdate = false;
-          var storeUpdate = componentStoreUpdate || _this.componentStoreUpdate;
+          var storeUpdate = componentStoreChange || _this.componentStoreChange;
 
           var updateFn = function updateFn() {
             if (isUpdate) return;
@@ -172,10 +172,10 @@ function getIsFunctionComponent(component) {
 /**
  * 监视函数组件
  * @param component {*} 函数组件
- * @param componentStoreUpdate {function(store,update)} 组件容器的数据修改时回调
+ * @param componentStoreChange {function(store,update)} 组件容器的数据修改时回调
  */
 
-function observeFunctionComponent(component, componentStoreUpdate) {
+function observeFunctionComponent(component, componentStoreChange) {
   var Component =
   /*#__PURE__*/
   function (_React$Component) {
@@ -194,18 +194,18 @@ function observeFunctionComponent(component, componentStoreUpdate) {
     return Component;
   }(React.Component);
 
-  return copyComponent(observeClassComponent(Component, componentStoreUpdate, false), component);
+  return copyComponent(observeClassComponent(Component, componentStoreChange, false), component);
 }
 
 /**
  * 监视组件容器的数据修改
  * @param ReactComponent {*} 组件
- * @param [componentStoreUpdate] {function(store,update)}  组件容器的数据修改时回调
+ * @param [componentStoreChange] {function(store,update)}  组件容器的数据修改时回调
  */
 
-function observe(ReactComponent, componentStoreUpdate) {
-  if (componentStoreUpdate === void 0) {
-    componentStoreUpdate = null;
+function observe(ReactComponent, componentStoreChange) {
+  if (componentStoreChange === void 0) {
+    componentStoreChange = null;
   }
 
   if (ReactComponent) {
@@ -213,14 +213,14 @@ function observe(ReactComponent, componentStoreUpdate) {
     ReactComponent.observed = true;
   }
 
-  if (componentStoreUpdate) {
-    throwError(typeof componentStoreUpdate !== 'function', 'componentStoreUpdate is not a function');
+  if (componentStoreChange) {
+    throwError(typeof componentStoreChange !== 'function', 'componentStoreChange is not a function');
   }
 
   if (getIsClassComponent(ReactComponent)) {
-    return observeClassComponent(ReactComponent, componentStoreUpdate);
+    return observeClassComponent(ReactComponent, componentStoreChange);
   } else if (getIsFunctionComponent(ReactComponent)) {
-    return observeFunctionComponent(ReactComponent, componentStoreUpdate);
+    return observeFunctionComponent(ReactComponent, componentStoreChange);
   } else {
     throwError(true, 'ReactComponent is not a react component');
   }

@@ -38,10 +38,10 @@ export function getIsClassComponent(component) {
 /**
  * 监视类组件
  * @param Component {*} 类组件
- * @param componentStoreUpdate {function(store,update)}  组件容器的数据修改时回调
+ * @param componentStoreChange {function(store,update)}  组件容器的数据修改时回调
  * @param needCopy {boolean} 是否拷贝组件react属性
  */
-export function observeClassComponent(Component, componentStoreUpdate, needCopy = true) {
+export function observeClassComponent(Component, componentStoreChange, needCopy = true) {
   class FinalComponent extends Component {
     constructor(props, context) {
       super(props, context);
@@ -56,7 +56,7 @@ export function observeClassComponent(Component, componentStoreUpdate, needCopy 
 
           let isUpdate = false;
 
-          const storeUpdate = componentStoreUpdate || this.componentStoreUpdate;
+          const storeUpdate = componentStoreChange || this.componentStoreChange;
           const updateFn = () => {
             if (isUpdate) return;
             isUpdate = true;
