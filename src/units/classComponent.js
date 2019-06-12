@@ -38,10 +38,10 @@ export function getIsClassComponent(component) {
 /**
  * 监视类组件
  * @param Component {*} 类组件
- * @param componentStoreChange {function(store,prevData):true|*}  组件容器的数据修改时回调
+ * @param componentStoreUpdate {function(store,update)}  组件容器的数据修改时回调
  * @param needCopy {boolean} 是否拷贝组件react属性
  */
-export function observeClassComponent(Component, componentStoreChange, needCopy = true) {
+export function observeClassComponent(Component, componentStoreUpdate, needCopy = true) {
   class FinalComponent extends Component {
     constructor(props, context) {
       super(props, context);
@@ -51,13 +51,22 @@ export function observeClassComponent(Component, componentStoreChange, needCopy 
       const forceUpdate = () => internal.isMounted && this.forceUpdate();
       const stores = [...Object.values(props), ...Object.values(this)].filter(store => getIsStore(store));
       const unSubscribes = stores.map((store) => {
-        return store.subscribe((prevData) => {
+        return store.subscribe(() => {
           if (!internal.isMounted) return;
 
-          const storeChange = componentStoreChange || this.componentStoreChange;
+          let isUpdate = false;
 
-          if (storeChange === undefined || storeChange.call(this, store, prevData) !== true) {
+          const storeUpdate = componentStoreUpdate || this.componentStoreUpdate;
+          const updateFn = () => {
+            if (isUpdate) return;
+            isUpdate = true;
             forceUpdate();
+          };
+
+          if (storeUpdate === undefined) {
+            forceUpdate();
+          } else {
+            storeUpdate.call(this, store, updateFn);
           }
         });
       });

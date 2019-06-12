@@ -13,7 +13,7 @@
 
 **observe** 用来监视一个组件，可以是类组件，也可以是无状态组件 <br />
 当组件 props 中的容器或者组件的容器属性发生数据修改时，会自动渲染组件 <br />
-使用 componentStoreChange 返回 true 会阻止自动渲染，从而达到手动控制渲染，componentStoreChange 只在组件 mount 时触发
+使用 componentStoreUpdate 手动控制渲染，componentStoreUpdate 只在组件 mount 时触发
 
 ## 示例
 
@@ -26,8 +26,8 @@ class UserComponent extends React.Component{
     sUser = userStore;
     sList = new ListModel();
     
-    //componentStoreChange 可省略
-    componentStoreChange(store,prevData){
+    //componentStoreUpdate 可省略
+    componentStoreUpdate(store,update){
         //... 
     }
     
@@ -57,12 +57,12 @@ const ListComponent = observe(function({sHistory,sList}) {
     (store,prevData):true|any
   }
   interface Component extends React.Component{
-    componentStoreChange?:IcomponentStoreChange
+    componentStoreChange?:IcomponentStoreUpdate
   }
   
   interface observe extends ClassDecorator{
-    <T extends React.ComponentClass>(ClassComponent:T,componentStoreChange?:IcomponentStoreChange):T
-    <T extends React.FunctionComponent>(functionComponent:T,componentStoreChange?:IcomponentStoreChange):T
+    <T extends React.ComponentClass>(ClassComponent:T,componentStoreChange?:IcomponentStoreUpdate):T
+    <T extends React.FunctionComponent>(functionComponent:T,componentStoreChange?:IcomponentStoreUpdate):T
   }
 ```
 
@@ -88,16 +88,6 @@ const UserComponent = observe(
     }
 );
 ```
-
-### combine
-
-```typescript
-  interface ICombine {
-    (...args:IcomponentStoreChange[]):IcomponentStoreChange
-  }
-```
-
-合并多个 componentStoreChange 为一个函数，执行顺序为从左向右
 
 #### 示例
 

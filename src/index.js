@@ -1,4 +1,3 @@
 export {default as observe} from './apis/observe'
-export {default as combine} from './apis/combine'
 
-export const version = '4.1.0';
+export const version = '5.0.0';

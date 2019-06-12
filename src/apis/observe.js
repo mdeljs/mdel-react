@@ -5,21 +5,21 @@ import {getIsFunctionComponent, observeFunctionComponent} from "../units/functio
 /**
  * 监视组件容器的数据修改
  * @param ReactComponent {*} 组件
- * @param [componentStoreChange] {function(store,prevData):true|*}  组件容器的数据修改时回调
+ * @param [componentStoreUpdate] {function(store,update)}  组件容器的数据修改时回调
  */
-export default function observe(ReactComponent, componentStoreChange = null) {
+export default function observe(ReactComponent, componentStoreUpdate = null) {
   if (ReactComponent) {
     throwError(ReactComponent.observed, 'you are already observe to this component');
 
     ReactComponent.observed = true;
   }
-  if (componentStoreChange) {
-    throwError(typeof componentStoreChange !== 'function', 'componentStoreChange is not a function');
+  if (componentStoreUpdate) {
+    throwError(typeof componentStoreUpdate !== 'function', 'componentStoreUpdate is not a function');
   }
   if (getIsClassComponent(ReactComponent)) {
-    return observeClassComponent(ReactComponent, componentStoreChange);
+    return observeClassComponent(ReactComponent, componentStoreUpdate);
   } else if (getIsFunctionComponent(ReactComponent)) {
-    return observeFunctionComponent(ReactComponent, componentStoreChange)
+    return observeFunctionComponent(ReactComponent, componentStoreUpdate)
   } else {
     throwError(true, 'ReactComponent is not a react component');
   }
