@@ -68,9 +68,10 @@ const ListComponent = observe(function({sHistory,sList}) {
 
 绑定react组件，监视容器的数据修改
 
-* componentStoreChange，在容器数据修改后执行，其中执行参数update可以渲染组件
+* componentStoreChange，在容器数据修改后执行，执行参数update可以渲染组件
 
 #### 示例
+
 1.
 ```jsx harmony
 //示例1
@@ -88,8 +89,10 @@ const UserComponent = observe(
         </div>
     }
 );
+```
 
 2.
+```jsx harmony
 @observe
 class UserComponent extends React.Component{
     componentStoreChange(store,update){
