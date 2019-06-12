@@ -13,7 +13,7 @@
 
 **observe** 用来监视一个组件，可以是类组件，也可以是无状态组件 <br />
 当组件 props 中的容器或者组件的容器属性发生数据修改时，会自动渲染组件 <br />
-使用 componentStoreChange 手动控制渲染，componentStoreChange 只在组件 mount 时触发
+可以使用 componentStoreChange 手动控制渲染，componentStoreChange 只在组件 mount 时触发
 
 ## 示例
 
