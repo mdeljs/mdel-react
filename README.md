@@ -72,7 +72,7 @@ const ListComponent = observe(function({sHistory,sList}) {
 
 #### 示例
 
-1.
+
 ```jsx harmony
 //示例1
 @observe
@@ -91,7 +91,7 @@ const UserComponent = observe(
 );
 ```
 
-2.
+
 ```jsx harmony
 @observe
 class UserComponent extends React.Component{
