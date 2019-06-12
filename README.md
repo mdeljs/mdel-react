@@ -53,22 +53,22 @@ const ListComponent = observe(function({sHistory,sList}) {
 ### observe
 
 ```typescript
-  interface IComponentStoreChange {
-    (store,prevData):true|any
+  interface IComponentStoreUpdate {
+    (store,update)
   }
   interface Component extends React.Component{
-    componentStoreChange?:IcomponentStoreUpdate
+    componentStoreUpdate?:IcomponentStoreUpdate
   }
   
   interface observe extends ClassDecorator{
-    <T extends React.ComponentClass>(ClassComponent:T,componentStoreChange?:IcomponentStoreUpdate):T
-    <T extends React.FunctionComponent>(functionComponent:T,componentStoreChange?:IcomponentStoreUpdate):T
+    <T extends React.ComponentClass>(ClassComponent:T,componentStoreUpdate?:IcomponentStoreUpdate):T
+    <T extends React.FunctionComponent>(functionComponent:T,componentStoreUpdate?:IcomponentStoreUpdate):T
   }
 ```
 
 绑定react组件，监视容器的数据修改
 
-* componentStoreChange，在容器数据修改后执行，返回 **true** 则不会渲染组件
+* componentStoreUpdate，在容器数据修改后执行，返回 **true** 则不会渲染组件
 
 #### 示例
 ```jsx harmony

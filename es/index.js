@@ -62,11 +62,11 @@ function getIsClassComponent(component) {
 /**
  * 监视类组件
  * @param Component {*} 类组件
- * @param componentStoreChange {function(store,prevData):true|*}  组件容器的数据修改时回调
+ * @param componentStoreUpdate {function(store,update)}  组件容器的数据修改时回调
  * @param needCopy {boolean} 是否拷贝组件react属性
  */
 
-function observeClassComponent(Component, componentStoreChange, needCopy) {
+function observeClassComponent(Component, componentStoreUpdate, needCopy) {
   if (needCopy === void 0) {
     needCopy = true;
   }
@@ -90,12 +90,21 @@ function observeClassComponent(Component, componentStoreChange, needCopy) {
         return getIsStore(store);
       });
       var unSubscribes = stores.map(function (store) {
-        return store.subscribe(function (prevData) {
+        return store.subscribe(function () {
           if (!internal.isMounted) return;
-          var storeChange = componentStoreChange || _this.componentStoreChange;
+          var isUpdate = false;
+          var storeUpdate = componentStoreUpdate || _this.componentStoreUpdate;
 
-          if (storeChange === undefined || storeChange.call(_assertThisInitialized(_this), store, prevData) !== true) {
+          var updateFn = function updateFn() {
+            if (isUpdate) return;
+            isUpdate = true;
             forceUpdate();
+          };
+
+          if (storeUpdate === undefined) {
+            forceUpdate();
+          } else {
+            storeUpdate.call(_assertThisInitialized(_this), store, updateFn);
           }
         });
       });
@@ -163,10 +172,10 @@ function getIsFunctionComponent(component) {
 /**
  * 监视函数组件
  * @param component {*} 函数组件
- * @param componentStoreChange {function(store,prevData):true|*} 组件容器的数据修改时回调
+ * @param componentStoreUpdate {function(store,update)} 组件容器的数据修改时回调
  */
 
-function observeFunctionComponent(component, componentStoreChange) {
+function observeFunctionComponent(component, componentStoreUpdate) {
   var Component =
   /*#__PURE__*/
   function (_React$Component) {
@@ -185,18 +194,18 @@ function observeFunctionComponent(component, componentStoreChange) {
     return Component;
   }(React.Component);
 
-  return copyComponent(observeClassComponent(Component, componentStoreChange, false), component);
+  return copyComponent(observeClassComponent(Component, componentStoreUpdate, false), component);
 }
 
 /**
  * 监视组件容器的数据修改
  * @param ReactComponent {*} 组件
- * @param [componentStoreChange] {function(store,prevData):true|*}  组件容器的数据修改时回调
+ * @param [componentStoreUpdate] {function(store,update)}  组件容器的数据修改时回调
  */
 
-function observe(ReactComponent, componentStoreChange) {
-  if (componentStoreChange === void 0) {
-    componentStoreChange = null;
+function observe(ReactComponent, componentStoreUpdate) {
+  if (componentStoreUpdate === void 0) {
+    componentStoreUpdate = null;
   }
 
   if (ReactComponent) {
@@ -204,42 +213,19 @@ function observe(ReactComponent, componentStoreChange) {
     ReactComponent.observed = true;
   }
 
-  if (componentStoreChange) {
-    throwError(typeof componentStoreChange !== 'function', 'componentStoreChange is not a function');
+  if (componentStoreUpdate) {
+    throwError(typeof componentStoreUpdate !== 'function', 'componentStoreUpdate is not a function');
   }
 
   if (getIsClassComponent(ReactComponent)) {
-    return observeClassComponent(ReactComponent, componentStoreChange);
+    return observeClassComponent(ReactComponent, componentStoreUpdate);
   } else if (getIsFunctionComponent(ReactComponent)) {
-    return observeFunctionComponent(ReactComponent, componentStoreChange);
+    return observeFunctionComponent(ReactComponent, componentStoreUpdate);
   } else {
     throwError(true, 'ReactComponent is not a react component');
   }
 }
 
-/**
- * 合并多个 componentStoreChange 函数为一个componentStoreChange
- * @param args {componentStoreChange[]}
- * @return {Function}
- */
-function combine() {
-  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-    args[_key] = arguments[_key];
-  }
+var version = '5.0.0';
 
-  return function () {
-    for (var _len2 = arguments.length, params = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      params[_key2] = arguments[_key2];
-    }
-
-    for (var i = 0, len = args.length; i < len; i++) {
-      if (args[i].apply(this, params) === true) {
-        return true;
-      }
-    }
-  };
-}
-
-var version = '4.1.0';
-
-export { version, observe, combine };
+export { version, observe };
