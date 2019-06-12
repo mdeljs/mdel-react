@@ -72,7 +72,6 @@ const ListComponent = observe(function({sHistory,sList}) {
 
 #### 示例
 
-
 ```jsx harmony
 //示例1
 @observe
@@ -90,27 +89,8 @@ const UserComponent = observe(
     }
 );
 ```
-
-
-```jsx harmony
-@observe
-class UserComponent extends React.Component{
-    componentStoreChange(store,update){
-        //当location中search发生修改时不要渲染组件
-        if(!getIsLocationSearchChange()){
-            update();
-        }
-    }
-}
-
-function getIsLocationSearchChange(store) {
-  if(store.name === 'history' && store.prevData.search !== store.data.search){
-    return true;
-  }
-  return false
-}
-```
 ## 更新日志
 
 ### 5.0.0
 1. 移除combine函数
+2. componentStoreChange参数调整
