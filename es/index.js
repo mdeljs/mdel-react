@@ -93,18 +93,18 @@ function observeClassComponent(Component, componentStoreChange, needCopy) {
         return store.subscribe(function () {
           if (!internal.isMounted) return;
           var isUpdate = false;
-          var storeUpdate = componentStoreChange || _this.componentStoreChange;
+          var storeChange = componentStoreChange || _this.componentStoreChange;
 
-          var updateFn = function updateFn() {
+          var updateComponent = function updateComponent() {
             if (isUpdate) return;
             isUpdate = true;
             forceUpdate();
           };
 
-          if (storeUpdate === undefined) {
+          if (storeChange === undefined) {
             forceUpdate();
           } else {
-            storeUpdate.call(_assertThisInitialized(_this), store, updateFn);
+            storeChange.call(_assertThisInitialized(_this), store, updateComponent);
           }
         });
       });

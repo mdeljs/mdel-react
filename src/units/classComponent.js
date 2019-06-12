@@ -56,17 +56,17 @@ export function observeClassComponent(Component, componentStoreChange, needCopy 
 
           let isUpdate = false;
 
-          const storeUpdate = componentStoreChange || this.componentStoreChange;
-          const updateFn = () => {
+          const storeChange = componentStoreChange || this.componentStoreChange;
+          const updateComponent = () => {
             if (isUpdate) return;
             isUpdate = true;
             forceUpdate();
           };
 
-          if (storeUpdate === undefined) {
+          if (storeChange === undefined) {
             forceUpdate();
           } else {
-            storeUpdate.call(this, store, updateFn);
+            storeChange.call(this, store, updateComponent);
           }
         });
       });
