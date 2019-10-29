@@ -112,7 +112,7 @@ function observe(ReactComponent, componentStoreChange) {
 /**
  * 监视类组件
  * @param Component {*} 类组件
- * @param componentStoreChange {function(store)}  组件容器的数据修改时回调
+ * @param componentStoreChange {function(store):boolean|*}  组件容器的数据修改时回调
  * @param needCopy {boolean} 是否拷贝组件react属性
  */
 
@@ -169,7 +169,7 @@ function observeClassComponent(Component, componentStoreChange, needCopy) {
 /**
  * 监视函数组件
  * @param component {*} 函数组件
- * @param componentStoreChange {function(store)} 组件容器的数据修改时回调
+ * @param componentStoreChange {function(store):boolean|*} 组件容器的数据修改时回调
  */
 
 
