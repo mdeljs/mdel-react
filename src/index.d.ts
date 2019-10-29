@@ -12,4 +12,6 @@ interface IReactComponent extends FunctionComponent, TClassComponent {
 
 export type TComponentStoreChange = (store: Model) => boolean | void;
 
-export function observe<T extends IReactComponent>(ReactComponent: T, componentStoreChange?: TComponentStoreChange): T;
+export interface observe<T extends IReactComponent> extends ClassDecorator{
+  (ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
+}

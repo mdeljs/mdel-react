@@ -27,7 +27,7 @@ class UserComponent extends React.Component{
     sList = new ListModel();
     
     //componentStoreChange 可省略
-    componentStoreChange(store,update){
+    componentStoreChange(store){
         //... 
     }
     
@@ -53,16 +53,18 @@ const ListComponent = observe(function({sHistory,sList}) {
 ### observe
 
 ```typescript
-  interface IcomponentStoreChange {
-    (store,update)
-  }
-  interface Component extends React.Component{
-    componentStoreChange?:IcomponentStoreChange
+  interface TClassComponent extends React.ClassicComponent {
+    componentStoreChange?: TComponentStoreChange
   }
   
-  interface observe extends ClassDecorator{
-    <T extends React.ComponentClass>(ClassComponent:T,componentStoreChange?:IcomponentStoreChange):T
-    <T extends React.FunctionComponent>(functionComponent:T,componentStoreChange?:IcomponentStoreChange):T
+  interface IReactComponent extends React.FunctionComponent, TClassComponent {
+    observed?: boolean
+  }
+  
+  export type TComponentStoreChange = (store: mdel.Model) => boolean | void;
+  
+  export interface observe<T extends IReactComponent> extends ClassDecorator{
+    (ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
   }
 ```
 
