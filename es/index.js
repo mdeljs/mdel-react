@@ -1,6 +1,6 @@
-import hoistStatics from 'hoist-non-react-statics';
-import { getIsStore, throwError } from 'mdel';
 import React from 'react';
+import { Model, throwError } from 'mdel';
+import hoistStatics from 'hoist-non-react-statics';
 
 function _inheritsLoose(subClass, superClass) {
   subClass.prototype = Object.create(superClass.prototype);
@@ -16,6 +16,66 @@ function _assertThisInitialized(self) {
   return self;
 }
 
+function findStores(data) {
+  var results = [];
+  data.forEach(function (store) {
+    //必须是Model的实例并且不存在结果中
+    if (store instanceof Model && !results.includes(store)) {
+      results.push(store);
+    }
+  });
+  return results;
+}
+/**
+ * 监视器
+ */
+
+
+var Monitor =
+/*#__PURE__*/
+function () {
+  function Monitor(component, componentStoreChange) {
+    var _this = this;
+
+    this.stores = [];
+    this.unSubscribes = [];
+    this.isMounted = false;
+
+    var forceUpdate = function forceUpdate() {
+      return component.forceUpdate();
+    };
+
+    var storeChange = componentStoreChange || component.componentStoreChange;
+    this.stores = findStores([].concat(Object.values(component.props), Object.values(component)));
+    this.unSubscribes = this.stores.map(function (store) {
+      return store.subscribe(function () {
+        if (!_this.isMounted) return;
+
+        if (storeChange === undefined || storeChange.call(_this, store) !== false) {
+          forceUpdate();
+        }
+      });
+    });
+  }
+
+  var _proto = Monitor.prototype;
+
+  _proto.mount = function mount() {
+    this.isMounted = true;
+  };
+
+  _proto.unmount = function unmount() {
+    this.isMounted = false;
+    var unSubscribes = this.unSubscribes;
+    this.unSubscribes = [];
+    unSubscribes.forEach(function (unSubscribe) {
+      return unSubscribe();
+    });
+  };
+
+  return Monitor;
+}();
+
 function copyComponent(target, source) {
   target.displayName = source.displayName || source.name;
   target.contextTypes = source.contextTypes;
@@ -26,188 +86,12 @@ function copyComponent(target, source) {
 }
 
 /**
- * 获取组件内部属性
- * @param component {*} 组件
- * @returns {{stores:*[],isMounted:boolean,unSubscribe:null || function()}}
- */
-
-function getInternal(component) {
-  var INTERNAL = '__MDEL_REACT__';
-
-  if (!component[INTERNAL]) {
-    Object.defineProperty(component, INTERNAL, {
-      enumerable: false,
-      configurable: false,
-      writable: false,
-      value: {
-        stores: [],
-        unSubscribe: null,
-        isMounted: false
-      }
-    });
-  }
-
-  return component[INTERNAL];
-}
-/**
- * 判断是否是类组件
- * @param component {*} 组件
- * @returns {boolean}
- */
-
-
-function getIsClassComponent(component) {
-  return typeof component === 'function' && component.prototype && !!component.prototype.isReactComponent;
-}
-/**
- * 监视类组件
- * @param Component {*} 类组件
- * @param componentStoreChange {function(store,update)}  组件容器的数据修改时回调
- * @param needCopy {boolean} 是否拷贝组件react属性
- */
-
-function observeClassComponent(Component, componentStoreChange, needCopy) {
-  if (needCopy === void 0) {
-    needCopy = true;
-  }
-
-  var FinalComponent =
-  /*#__PURE__*/
-  function (_Component) {
-    _inheritsLoose(FinalComponent, _Component);
-
-    function FinalComponent(props, context) {
-      var _this;
-
-      _this = _Component.call(this, props, context) || this;
-      var internal = getInternal(_assertThisInitialized(_this));
-
-      var forceUpdate = function forceUpdate() {
-        return internal.isMounted && _this.forceUpdate();
-      };
-
-      var stores = [].concat(Object.values(props), Object.values(_assertThisInitialized(_this))).filter(function (store) {
-        return getIsStore(store);
-      });
-      var unSubscribes = stores.map(function (store) {
-        return store.subscribe(function () {
-          if (!internal.isMounted) return;
-          var isUpdate = false;
-          var storeChange = componentStoreChange || _this.componentStoreChange;
-
-          var updateComponent = function updateComponent() {
-            if (isUpdate) return;
-            isUpdate = true;
-            forceUpdate();
-          };
-
-          if (storeChange === undefined) {
-            forceUpdate();
-          } else {
-            storeChange.call(_assertThisInitialized(_this), store, updateComponent);
-          }
-        });
-      });
-
-      internal.unSubscribe = function () {
-        unSubscribes.forEach(function (unSubscribe) {
-          return unSubscribe();
-        });
-      };
-
-      internal.stores = stores;
-      return _this;
-    }
-
-    var _proto = FinalComponent.prototype;
-
-    _proto.componentDidMount = function componentDidMount() {
-      var internal = getInternal(this);
-
-      if (_Component.prototype.componentDidMount) {
-        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-          args[_key] = arguments[_key];
-        }
-
-        _Component.prototype.componentDidMount.apply(this, args);
-      }
-
-      internal.isMounted = true;
-    };
-
-    _proto.componentWillUnmount = function componentWillUnmount() {
-      var internal = getInternal(this);
-
-      if (_Component.prototype.componentWillUnmount) {
-        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-          args[_key2] = arguments[_key2];
-        }
-
-        _Component.prototype.componentWillUnmount.apply(this, args);
-      }
-
-      internal.isMounted = false;
-
-      if (internal.unSubscribe) {
-        internal.unSubscribe();
-        internal.unSubscribe = null;
-      }
-    };
-
-    return FinalComponent;
-  }(Component);
-
-  return needCopy ? copyComponent(FinalComponent, Component) : FinalComponent;
-}
-
-/**
- * 判断是否是函数组件
- * @param component {*} 组件
- * @returns {boolean}
- */
-
-function getIsFunctionComponent(component) {
-  return typeof component === 'function';
-}
-/**
- * 监视函数组件
- * @param component {*} 函数组件
- * @param componentStoreChange {function(store,update)} 组件容器的数据修改时回调
- */
-
-function observeFunctionComponent(component, componentStoreChange) {
-  var Component =
-  /*#__PURE__*/
-  function (_React$Component) {
-    _inheritsLoose(Component, _React$Component);
-
-    function Component() {
-      return _React$Component.apply(this, arguments) || this;
-    }
-
-    var _proto = Component.prototype;
-
-    _proto.render = function render() {
-      return component.call(this, this.props, this.context);
-    };
-
-    return Component;
-  }(React.Component);
-
-  return copyComponent(observeClassComponent(Component, componentStoreChange, false), component);
-}
-
-/**
  * 监视组件容器的数据修改
  * @param ReactComponent {*} 组件
- * @param [componentStoreChange] {function(store,update)}  组件容器的数据修改时回调
+ * @param [componentStoreChange] {function(store):boolean|*}  组件容器的数据修改时回调
  */
 
 function observe(ReactComponent, componentStoreChange) {
-  if (componentStoreChange === void 0) {
-    componentStoreChange = null;
-  }
-
   if (ReactComponent) {
     throwError(ReactComponent.observed, 'you are already observe to this component');
     ReactComponent.observed = true;
@@ -217,15 +101,105 @@ function observe(ReactComponent, componentStoreChange) {
     throwError(typeof componentStoreChange !== 'function', 'componentStoreChange is not a function');
   }
 
-  if (getIsClassComponent(ReactComponent)) {
-    return observeClassComponent(ReactComponent, componentStoreChange);
-  } else if (getIsFunctionComponent(ReactComponent)) {
-    return observeFunctionComponent(ReactComponent, componentStoreChange);
-  } else {
+  var component = observeClassComponent(ReactComponent, componentStoreChange) || observeFunctionComponent(ReactComponent, componentStoreChange);
+
+  if (!component) {
     throwError(true, 'ReactComponent is not a react component');
   }
+
+  return component;
+}
+/**
+ * 监视类组件
+ * @param Component {*} 类组件
+ * @param componentStoreChange {function(store)}  组件容器的数据修改时回调
+ * @param needCopy {boolean} 是否拷贝组件react属性
+ */
+
+function observeClassComponent(Component, componentStoreChange, needCopy) {
+  if (needCopy === void 0) {
+    needCopy = true;
+  }
+
+  //判断是否是类组件
+  if (!(typeof Component === 'function' && Component.prototype && !!Component.prototype.isReactComponent)) {
+    return;
+  }
+
+  var FinalComponent =
+  /*#__PURE__*/
+  function (_Component) {
+    _inheritsLoose(FinalComponent, _Component);
+
+    function FinalComponent() {
+      var _this;
+
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      _this = _Component.call.apply(_Component, [this].concat(args)) || this;
+      _this.monitor = new Monitor(_assertThisInitialized(_this), componentStoreChange);
+      return _this;
+    }
+
+    var _proto = FinalComponent.prototype;
+
+    _proto.componentDidMount = function componentDidMount() {
+      this.monitor.mount();
+
+      if (_Component.prototype.componentDidMount) {
+        _Component.prototype.componentDidMount.apply(this);
+      }
+    };
+
+    _proto.componentWillUnmount = function componentWillUnmount() {
+      if (_Component.prototype.componentWillUnmount) {
+        _Component.prototype.componentWillUnmount.apply(this);
+      }
+
+      this.monitor.unmount();
+    };
+
+    return FinalComponent;
+  }(Component);
+
+  return needCopy ? copyComponent(FinalComponent, Component) : FinalComponent;
+}
+/**
+ * 监视函数组件
+ * @param component {*} 函数组件
+ * @param componentStoreChange {function(store)} 组件容器的数据修改时回调
+ */
+
+
+function observeFunctionComponent(component, componentStoreChange) {
+  //非函数组件直接返回
+  if (typeof component !== 'function') {
+    return;
+  }
+
+  var Component =
+  /*#__PURE__*/
+  function (_React$Component) {
+    _inheritsLoose(Component, _React$Component);
+
+    function Component() {
+      return _React$Component.apply(this, arguments) || this;
+    }
+
+    var _proto2 = Component.prototype;
+
+    _proto2.render = function render() {
+      return component.call(this, this.props, this.context);
+    };
+
+    return Component;
+  }(React.Component);
+
+  return copyComponent(observeClassComponent(Component, componentStoreChange, false), component);
 }
 
-var version = '5.0.0';
+var version = '6.0.0';
 
-export { version, observe };
+export { observe, version };

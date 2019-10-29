@@ -1,4 +1,5 @@
 import babel from 'rollup-plugin-babel'
+import copy from 'rollup-plugin-copy'
 import pkg from './package.json'
 
 export default [
@@ -11,7 +12,12 @@ export default [
       ...Object.keys(pkg.peerDependencies || {})
     ],
     plugins: [
-      babel()
+      babel(),
+      copy({
+        targets: [
+          {src: 'src/index.d.ts', dest: 'es'}
+        ]
+      })
     ]
   }
 ]

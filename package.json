@@ -1,6 +1,6 @@
 {
   "name": "mdel-react",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "绑定react组件，来监视容器的数据修改",
   "license": "MIT",
   "repository": "github:mdeljs/mdel-react",
@@ -25,18 +25,20 @@
   ],
   "main": "es/index.js",
   "module": "es/index.js",
+  "typings": "es/index.d.ts",
   "dependencies": {
+    "@types/react": "^16.9.11",
     "hoist-non-react-statics": "^3.2.1",
-    "mdel": "^4.0.0",
-    "react": "^16.0.0"
+    "mdel": "^5.0.0",
+    "react": "^16.11.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "rollup": "^0.66.6",
-    "rollup-plugin-babel": "^4.0.3",
+    "@babel/core": "^7.6.4",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.6.3",
+    "rollup": "^1.26.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-copy": "^3.1.0",
     "rollup-plugin-minify": "^1.0.3"
   }
 }
