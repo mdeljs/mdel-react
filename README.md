@@ -94,8 +94,8 @@ const UserComponent = observe(
 ## 更新日志
 
 ### 6.0.0
-1.增加typescript支持
-2.componentStoreChange参数调整
+1. 增加typescript支持
+2. componentStoreChange参数调整
 
 ### 5.0.0
 1. 移除combine函数
