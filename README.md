@@ -13,7 +13,7 @@
 
 **observe** 用来监视一个组件，可以是类组件，也可以是无状态组件 <br />
 当组件 props 中的容器或者组件的容器属性发生数据修改时，会自动渲染组件 <br />
-可以使用 componentStoreChange 手动控制渲染，componentStoreChange 只在组件 mount 时触发
+可以使用 componentStoreChange 来阻止自动渲染，componentStoreChange 只在组件 mount 时触发
 
 ## 示例
 
@@ -61,16 +61,16 @@ const ListComponent = observe(function({sHistory,sList}) {
     observed?: boolean
   }
   
-  export type TComponentStoreChange = (store: mdel.Model) => boolean | void;
+  type TComponentStoreChange = (store: mdel.Model) => boolean | void;
   
-  export interface observe<T extends IReactComponent> extends ClassDecorator{
+  interface observe<T extends IReactComponent> extends ClassDecorator{
     (ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
   }
 ```
 
 绑定react组件，监视容器的数据修改
 
-* componentStoreChange，在容器数据修改后执行，执行参数update可以渲染组件
+* componentStoreChange，在容器数据修改后执行，返回 false 阻止本次自动渲染组件
 
 #### 示例
 
@@ -92,6 +92,10 @@ const UserComponent = observe(
 );
 ```
 ## 更新日志
+
+### 6.0.0
+1.增加typescript支持
+2.componentStoreChange参数调整
 
 ### 5.0.0
 1. 移除combine函数
