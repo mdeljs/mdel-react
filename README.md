@@ -58,11 +58,11 @@ import {observe} from "mdel-react";
 interface IData{
     username:string
 }
-interface IUserProps {
+interface IRootProps {
   user:Model<IData>
 }
 
-const Root1 = observe(function<IUserProps> (props) {
+const Root1 = observe(function<IRootProps> (props) {
   const {user} = props;
 
   return <div>
@@ -71,7 +71,7 @@ const Root1 = observe(function<IUserProps> (props) {
 });
 
 @observe
-class Root2 extends React.Component<IUserProps>{
+class Root2 extends React.Component<IRootProps>{
   sList = new ListModel();
 
   render(){
