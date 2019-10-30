@@ -48,11 +48,61 @@ const ListComponent = observe(function({sHistory,sList}) {
 
 ```
 
+* typescript
+
+```typescript jsx
+import * as React from "react";
+import {Model} from "mdel";
+import {observe} from "mdel-react";
+
+interface IData{
+    username:string
+}
+interface IUserProps {
+  user:Model<IData>
+}
+
+const Root1 = observe(function<IUserProps> (props) {
+  const {user} = props;
+
+  return <div>
+    {user.data.username}
+  </div>  
+});
+
+@observe
+class Root2 extends React.Component<IUserProps>{
+  sList = new ListModel();
+
+  render(){
+    const {user} = this.props;
+
+    return <div>
+      {user.data.username}
+    </div>
+  }
+}
+
+function App() {
+    const sUser = new UserModel({
+        username:''
+    });
+
+  return <div>
+        <Root1 user={sUser}/>
+        <Root2 user={sUser}/>
+    </div>
+}
+```
+
 ## API
 
 ### observe
 
 ```typescript
+  import * as React from "react";
+  import {Model} from 'mdel' 
+
   interface IComponent<P = any, S = {}, SS = any> extends React.Component<P, S, SS> {
     componentStoreChange?: TComponentStoreChange
   }
