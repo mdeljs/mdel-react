@@ -53,19 +53,19 @@ const ListComponent = observe(function({sHistory,sList}) {
 ### observe
 
 ```typescript
-  interface TClassComponent extends React.ClassicComponent {
+  interface IComponent<P = any, S = {}, SS = any> extends React.Component<P, S, SS> {
     componentStoreChange?: TComponentStoreChange
   }
   
-  interface IReactComponent extends React.FunctionComponent, TClassComponent {
-    observed?: boolean
+  interface IClassComponent<P = any, S = React.ComponentState> extends React.ComponentClass<P, S> {
+    new(props: P, context?: any): IComponent<P, S>;
   }
   
-  type TComponentStoreChange = (store: mdel.Model) => boolean | void;
+  declare type TComponentStoreChange = (store: Model) => boolean | void;
   
-  interface observe<T extends IReactComponent> extends ClassDecorator{
-    (ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
-  }
+  declare type IReactComponent = IClassComponent | React.FunctionComponent;
+  
+  declare function observe<T extends IReactComponent>(ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
 ```
 
 绑定react组件，监视容器的数据修改
