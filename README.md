@@ -18,29 +18,32 @@
 ## 示例
 
 ```jsx harmony
+import React from "react";
 import {observe} from 'mdel-react'
 
 //1.
 @observe
-class UserComponent extends React.Component{
-    sUser = userStore;
-    sList = new ListModel();
+class Page1 extends React.Component{
+  sUser = userStore;
+  sList = new ListModel();
     
-    //componentStoreChange 可省略
-    componentStoreChange(store){
-        //... 
-    }
+  //componentStoreChange 可省略
+  componentStoreChange(store){
+    //... 
+  }
     
-    render(){
-        const {sHistory} = this.props;
+  render(){
+    const {sHistory} = this.props;
         
-        return <div>
-            ...
-        </div>
-    }
+      return <div>
+        ...
+      </div>
+  }
 }
 //2.
-const ListComponent = observe(function({sHistory,sList}) {
+const Page2 = observe(function(props) {
+  const {sHistory,sList} = props;  
+
   return <div>
     ...
   </div>
@@ -56,42 +59,50 @@ import {Model} from "mdel";
 import {observe} from "mdel-react";
 
 interface IData{
-    username:string
+  username:string
 }
-interface IRootProps {
+interface IPageProps {
   user:Model<IData>
 }
 
-const Root1 = observe(function<IRootProps> (props) {
+const Page1 = observe(function<IPageProps> (props) {
   const {user} = props;
 
   return <div>
-    {user.data.username}
+    username:{user.data.username}
   </div>  
 });
 
 @observe
-class Root2 extends React.Component<IRootProps>{
+class Page2 extends React.Component<IPageProps>{
   sList = new ListModel();
 
   render(){
     const {user} = this.props;
 
+    if(this.sList.data.loading){
+      return <div>loading</div>
+    }
     return <div>
-      {user.data.username}
+      username:{user.data.username}<br/>
+      {
+        this.sList.data.list.map(function(item,index) {
+          return <div key={index}>{item.content}</div>
+        })
+      }
     </div>
   }
 }
 
 function App() {
-    const sUser = new UserModel({
-        username:''
-    });
+  const sUser = new UserModel({
+    username:''
+  });
 
   return <div>
-        <Root1 user={sUser}/>
-        <Root2 user={sUser}/>
-    </div>
+    <Page1 user={sUser}/>
+    <Page2 user={sUser}/>
+  </div>
 }
 ```
 
@@ -100,22 +111,22 @@ function App() {
 ### observe
 
 ```typescript
-  import * as React from "react";
-  import {Model} from 'mdel' 
+import * as React from "react";
+import {Model} from 'mdel' 
 
-  interface IComponent<P = any, S = {}, SS = any> extends React.Component<P, S, SS> {
-    componentStoreChange?: TComponentStoreChange
-  }
+interface IComponent<P = any, S = {}, SS = any> extends React.Component<P, S, SS> {
+  componentStoreChange?: TComponentStoreChange
+}
   
-  interface IClassComponent<P = any, S = React.ComponentState> extends React.ComponentClass<P, S> {
-    new(props: P, context?: any): IComponent<P, S>;
-  }
+interface IClassComponent<P = any, S = React.ComponentState> extends React.ComponentClass<P, S> {
+  new(props: P, context?: any): IComponent<P, S>;
+}
   
-  declare type TComponentStoreChange = (store: Model) => boolean | void;
+declare type TComponentStoreChange = (store: Model) => boolean | void;
   
-  declare type IReactComponent = IClassComponent | React.FunctionComponent;
+declare type IReactComponent = IClassComponent | React.FunctionComponent;
   
-  declare function observe<T extends IReactComponent>(ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
+declare function observe<T extends IReactComponent>(ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
 ```
 
 绑定react组件，监视容器的数据修改
@@ -127,18 +138,20 @@ function App() {
 ```jsx harmony
 //示例1
 @observe
-class UserComponent extends React.Component{}
+class PageComponent1 extends React.Component{}
 //示例2
-const UserComponent = observe(
-    class extends React.Component{}
+const PageComponent2 = observe(
+  class extends React.Component{}
 );
 //示例3
-const UserComponent = observe(
-    function({sUser}){
-        return <div>
-            ...
-        </div>
-    }
+const PageComponent3 = observe(
+  function(props){
+    const {sUser} = props;
+
+    return <div>
+      ...
+    </div>
+  }
 );
 ```
 ## 更新日志
