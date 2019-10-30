@@ -29,7 +29,7 @@
   "dependencies": {
     "@types/react": "^16.9.11",
     "hoist-non-react-statics": "^3.2.1",
-    "mdel": "^5.0.0",
+    "mdel": "^6.0.0",
     "react": "^16.11.0"
   },
   "devDependencies": {
