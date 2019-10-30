@@ -1,17 +1,18 @@
 import {Model} from "mdel";
-import {ClassicComponent, FunctionComponent} from "react";
+import * as React from "react"
 
-
-interface TClassComponent extends ClassicComponent {
+interface IComponent<P = any, S = {}, SS = any> extends React.Component<P, S, SS> {
   componentStoreChange?: TComponentStoreChange
 }
 
-interface IReactComponent extends FunctionComponent, TClassComponent {
-  observed?: boolean
+interface IClassComponent<P = any, S = React.ComponentState> extends React.ComponentClass<P, S> {
+  new(props: P, context?: any): IComponent<P, S>;
 }
 
 export declare type TComponentStoreChange = (store: Model) => boolean | void;
 
-export declare function observe<T extends IReactComponent> (ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
+export declare type IReactComponent = IClassComponent | React.FunctionComponent;
 
-export declare const version = "6.0.1";
+export declare function observe<T extends IReactComponent>(ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
+
+export declare const version = "6.0.2";

@@ -93,7 +93,7 @@ const UserComponent = observe(
 ```
 ## 更新日志
 
-### 6.0.1
+### 6.0.2
 1. 增加typescript支持
 2. componentStoreChange参数调整
 
