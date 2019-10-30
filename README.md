@@ -29,23 +29,26 @@ class Page1 extends React.Component{
     
   //componentStoreChange 可省略
   componentStoreChange(store){
-    //... 
+    //当store为ListModel的实例时，不会自动渲染组件
+    if(store instanceof ListModel){
+      return false;       
+    }   
   }
     
   render(){
-    const {sHistory} = this.props;
+    const {sUser} = this.props;
         
       return <div>
-        ...
+        username:{sUser.data.username}
       </div>
   }
 }
 //2.
 const Page2 = observe(function(props) {
-  const {sHistory,sList} = props;  
+  const {sUser,sList} = props;  
 
   return <div>
-    ...
+    username:{sUser.data.username}
   </div>
 })
 
