@@ -62,14 +62,14 @@ interface IData{
   username:string
 }
 interface IPageProps {
-  user:Model<IData>
+  sUser:Model<IData>
 }
 
 const Page1 = observe(function<IPageProps> (props) {
-  const {user} = props;
+  const {sUser} = props;
 
   return <div>
-    username:{user.data.username}
+    username:{sUser.data.username}
   </div>  
 });
 
@@ -78,13 +78,13 @@ class Page2 extends React.Component<IPageProps>{
   sList = new ListModel();
 
   render(){
-    const {user} = this.props;
+    const {sUser} = this.props;
 
     if(this.sList.data.loading){
       return <div>loading</div>
     }
     return <div>
-      username:{user.data.username}<br/>
+      username:{sUser.data.username}<br/>
       {
         this.sList.data.list.map(function(item,index) {
           return <div key={index}>{item.content}</div>
@@ -100,8 +100,8 @@ function App() {
   });
 
   return <div>
-    <Page1 user={sUser}/>
-    <Page2 user={sUser}/>
+    <Page1 sUser={sUser}/>
+    <Page2 sUser={sUser}/>
   </div>
 }
 ```
@@ -145,13 +145,7 @@ const PageComponent2 = observe(
 );
 //示例3
 const PageComponent3 = observe(
-  function(props){
-    const {sUser} = props;
-
-    return <div>
-      ...
-    </div>
-  }
+  function(props){}
 );
 ```
 ## 更新日志
