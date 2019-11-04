@@ -15,4 +15,4 @@ export declare type IReactComponent = IClassComponent | React.StatelessComponent
 
 export declare function observe<T extends IReactComponent>(ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
 
-export declare const version = "6.0.4";
+export declare const version = "6.0.5";

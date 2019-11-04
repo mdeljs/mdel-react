@@ -33,7 +33,7 @@ export default class Monitor {
       return store.subscribe(() => {
         if (!this.isMounted) return;
 
-        if (storeChange === undefined || storeChange.call(this, store) !== false) {
+        if (storeChange === undefined || storeChange.call(component, store) !== false) {
           forceUpdate();
         }
       });

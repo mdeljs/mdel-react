@@ -51,7 +51,7 @@ function () {
       return store.subscribe(function () {
         if (!_this.isMounted) return;
 
-        if (storeChange === undefined || storeChange.call(_this, store) !== false) {
+        if (storeChange === undefined || storeChange.call(component, store) !== false) {
           forceUpdate();
         }
       });
@@ -200,6 +200,6 @@ function observeFunctionComponent(component, componentStoreChange) {
   return copyComponent(observeClassComponent(Component, componentStoreChange, false), component);
 }
 
-var version = '6.0.4';
+var version = '6.0.5';
 
 export { observe, version };
