@@ -200,6 +200,6 @@ function observeFunctionComponent(component, componentStoreChange) {
   return copyComponent(observeClassComponent(Component, componentStoreChange, false), component);
 }
 
-var version = '6.0.3';
+var version = '6.0.4';
 
 export { observe, version };

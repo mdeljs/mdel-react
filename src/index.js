@@ -1,3 +1,3 @@
 export {default as observe} from './apis/observe'
 
-export const version = '6.0.3';
+export const version = '6.0.4';

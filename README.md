@@ -9,6 +9,8 @@
 
 **mdel** 是一个数据管理器，文档 [链接](https://github.com/mdeljs/mdel)
 
+推荐一些数据模型 [链接](https://github.com/mdeljs/mdel-react)
+
 ## 使用
 
 **observe** 用来监视一个组件，可以是类组件，也可以是无状态组件 <br />
@@ -153,7 +155,7 @@ const PageComponent3 = observe(
 ```
 ## 更新日志
 
-### 6.0.3
+### 6.0.4
 1. 增加typescript支持
 2. componentStoreChange参数调整
 
