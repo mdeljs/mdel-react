@@ -119,12 +119,12 @@ function App() {
 import * as React from "react";
 import {Model} from 'mdel' 
 
-interface IComponent<P = any, S = {}, SS = any> extends React.Component<P, S, SS> {
+interface IMdelLifecycle{
   componentStoreChange?: TComponentStoreChange
 }
-  
+
 interface IClassComponent<P = any, S = React.ComponentState> extends React.ComponentClass<P, S> {
-  new(props: P, context?: any): IComponent<P, S>;
+  new(props: P, context?: any): React.Component<P, S> & IMdelLifecycle;
 }
   
 declare type TComponentStoreChange = (store: Model) => boolean | void;
