@@ -11,8 +11,8 @@ interface IClassComponent<P = any, S = React.ComponentState> extends React.Compo
 
 export declare type TComponentStoreChange = (store: Model) => boolean | void;
 
-export declare type IReactComponent = IClassComponent | React.StatelessComponent;
+export declare type TReactComponent = IClassComponent | React.StatelessComponent;
 
-export declare function observe<T extends IReactComponent>(ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
+export declare function observe<T extends TReactComponent>(ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
 
-export declare const version = "6.0.5";
+export declare const version = "6.0.6";

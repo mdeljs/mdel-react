@@ -119,19 +119,19 @@ function App() {
 import * as React from "react";
 import {Model} from 'mdel' 
 
-interface IMdelLifecycle{
+interface IComponent<P = any, S = {}, SS = any> extends React.Component<P, S, SS> {
   componentStoreChange?: TComponentStoreChange
 }
 
 interface IClassComponent<P = any, S = React.ComponentState> extends React.ComponentClass<P, S> {
-  new(props: P, context?: any): React.Component<P, S> & IMdelLifecycle;
+  new(props: P, context?: any): IComponent<P, S>;
 }
   
 declare type TComponentStoreChange = (store: Model) => boolean | void;
   
-declare type IReactComponent = IClassComponent | React.FunctionComponent;
+export declare type TReactComponent = IClassComponent | React.StatelessComponent;
   
-declare function observe<T extends IReactComponent>(ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
+declare function observe<T extends TReactComponent>(ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
 ```
 
 绑定react组件，监视容器的数据修改
@@ -155,7 +155,7 @@ const PageComponent3 = observe(
 ```
 ## 更新日志
 
-### 6.0.5
+### 6.0.6
 1. 增加typescript支持
 2. componentStoreChange参数调整
 
