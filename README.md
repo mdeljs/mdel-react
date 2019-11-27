@@ -28,18 +28,18 @@ import {observe} from 'mdel-react'
 class Page1 extends React.Component{
   sUser = userStore;
   sList = new ListModel();
-    
+
   //componentStoreChange 可省略
   componentStoreChange(store){
     //当store为ListModel的实例时，不会自动渲染组件
     if(store instanceof ListModel){
-      return false;       
-    }   
+      return false;
+    }
   }
-    
+
   render(){
     const {sUser} = this.props;
-        
+
       return <div>
         username:{sUser.data.username}
       </div>
@@ -47,7 +47,7 @@ class Page1 extends React.Component{
 }
 //2.
 const Page2 = observe(function(props) {
-  const {sUser,sList} = props;  
+  const {sUser,sList} = props;
 
   return <div>
     username:{sUser.data.username}
@@ -63,11 +63,11 @@ import * as React from "react";
 import {Model} from "mdel";
 import {observe} from "mdel-react";
 
-interface IData{
+interface UserData{
   username:string
 }
 interface IPageProps {
-  sUser:Model<IData>
+  sUser:Model<UserData>
 }
 
 const Page1 = observe(function<IPageProps> (props) {
@@ -75,7 +75,7 @@ const Page1 = observe(function<IPageProps> (props) {
 
   return <div>
     username:{sUser.data.username}
-  </div>  
+  </div>
 });
 
 @observe
@@ -116,22 +116,24 @@ function App() {
 ### observe
 
 ```typescript
-import * as React from "react";
-import {Model} from 'mdel' 
+import * as React from "react"
+import {Model} from "mdel";
 
-interface IComponent<P = any, S = {}, SS = any> extends React.Component<P, S, SS> {
-  componentStoreChange?: TComponentStoreChange
+interface ObservantComponent<P = any, S = {}, SS = any> extends React.Component<P, S, SS> {
+  componentStoreChange?: ComponentStoreChange
 }
 
-interface IClassComponent<P = any, S = React.ComponentState> extends React.ComponentClass<P, S> {
-  new(props: P, context?: any): IComponent<P, S>;
+interface ObservantClassComponent<P = any, S = React.ComponentState> extends React.ComponentClass<P, S> {
+  new(props: P, context?: any): ObservantComponent<P, S>;
 }
-  
-declare type TComponentStoreChange = (store: Model) => boolean | void;
-  
-export declare type TReactComponent = IClassComponent | React.StatelessComponent;
-  
-declare function observe<T extends TReactComponent>(ReactComponent: T, componentStoreChange?: TComponentStoreChange): T
+
+type ComponentStoreChange = (store: Model) => boolean | void;
+
+type ObservantReactComponent = ObservantClassComponent | React.StatelessComponent;
+
+interface observe<T extends ObservantReactComponent> {
+  (ReactComponent: T, componentStoreChange?: ComponentStoreChange): T
+}
 ```
 
 绑定react组件，监视容器的数据修改

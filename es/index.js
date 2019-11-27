@@ -92,21 +92,21 @@ function copyComponent(target, source) {
  */
 
 function observe(ReactComponent, componentStoreChange) {
-  if (ReactComponent) {
-    throwError(ReactComponent.observed, 'you are already observe to this component');
-    ReactComponent.observed = true;
+  if (ReactComponent && ReactComponent.observed) {
+    throwError('you are already observe to this component');
   }
 
-  if (componentStoreChange) {
-    throwError(typeof componentStoreChange !== 'function', 'componentStoreChange is not a function');
+  if (componentStoreChange && typeof componentStoreChange !== 'function') {
+    throwError('componentStoreChange is not a function');
   }
 
   var component = observeClassComponent(ReactComponent, componentStoreChange) || observeFunctionComponent(ReactComponent, componentStoreChange);
 
   if (!component) {
-    throwError(true, 'ReactComponent is not a react component');
+    throwError('ReactComponent is not a react component');
   }
 
+  ReactComponent.observed = true;
   return component;
 }
 /**
@@ -200,6 +200,4 @@ function observeFunctionComponent(component, componentStoreChange) {
   return copyComponent(observeClassComponent(Component, componentStoreChange, false), component);
 }
 
-var version = '6.0.6';
-
-export { observe, version };
+export { observe };

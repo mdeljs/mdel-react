@@ -9,12 +9,11 @@ import {copyComponent} from '../units/common'
  * @param [componentStoreChange] {function(store):boolean|*}  组件容器的数据修改时回调
  */
 export default function observe(ReactComponent, componentStoreChange) {
-  if (ReactComponent) {
-    throwError(ReactComponent.observed, 'you are already observe to this component');
-    ReactComponent.observed = true;
+  if (ReactComponent && ReactComponent.observed) {
+    throwError('you are already observe to this component');
   }
-  if (componentStoreChange) {
-    throwError(typeof componentStoreChange !== 'function', 'componentStoreChange is not a function');
+  if (componentStoreChange && typeof componentStoreChange !== 'function') {
+    throwError('componentStoreChange is not a function');
   }
 
   const component = (
@@ -23,9 +22,10 @@ export default function observe(ReactComponent, componentStoreChange) {
   );
 
   if (!component) {
-    throwError(true, 'ReactComponent is not a react component');
+    throwError('ReactComponent is not a react component');
   }
 
+  ReactComponent.observed = true;
   return component;
 }
 
